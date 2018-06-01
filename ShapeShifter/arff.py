@@ -19,6 +19,8 @@ def isDate(column):
                 return False
     return True
 
+#Pass in a dataframe, which will be changed to an ARFF file
+#The file name is the second parameter you'll pass in.  
 def toARFF(df, fileName):
    
     df = df.fillna("?")
@@ -28,6 +30,7 @@ def toARFF(df, fileName):
     relation = re.sub(pattern, "", fileName)
     writeFile.write("@RELATION\t" + relation + "\n")
 #Check the type for each column and write them in as attributes
+#The info in this part of the file is tab delimited
     for colName in list(df):		
         writeFile.write("@ATTRIBUTE\t" + colName)
         options = set([])

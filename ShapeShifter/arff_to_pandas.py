@@ -19,6 +19,16 @@ def arffToPandas(fileName):
             line = line.replace("?", "") 
             dataList.append(line.split(","))      
     data = pd.DataFrame(dataList, columns = columnNames)
+    data = data.replace("?", np.nan)
+    for column in data:
+        data[column] = pd.to_numeric(data[column], errors='ignore')
+        i = True
+        for cell in data[column]:
+            if cell != "True" and cell != "False" and not pd.isnull(cell):
+                i = False
+                break
+        if i == True:
+            data[column] = data[column].astype('bool') 
     return data 
     
 

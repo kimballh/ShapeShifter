@@ -1,12 +1,15 @@
 import pandas as pd
 import re
+import numpy as np
 
 #Converts an ARFF file (the parameter) into a pandas dataframe
 def arffToPandas(fileName):
     columnNames = []
     dataList = []
     pattern = r"@[Aa][Tt][Tt][Rr][Ii][Bb][Uu][Tt][Ee]\s+([^\s]*)\s+.*"
-    with open("diabetes.arff") as dataFile:
+   
+  
+    with open(fileName) as dataFile:
         for line in dataFile: 
             line = line.rstrip("\n")
 #Takes the column names in the attribute and put them in a list 
@@ -15,23 +18,21 @@ def arffToPandas(fileName):
                 continue
             elif line.startswith("@") or line.startswith("%") or line == "":
                 continue
-#Turns the lines into lists and put them into a list
-            line = line.replace("?", "") 
+#Turns the lines into lists and put them into a list 
             dataList.append(line.split(","))      
     data = pd.DataFrame(dataList, columns = columnNames)
     data = data.replace("?", np.nan)
     for column in data:
+#Finds columns with numbers and changes the datatype to int or float
         data[column] = pd.to_numeric(data[column], errors='ignore')
-        i = True
+#Converts true/false strings into booleans
         for cell in data[column]:
-            if cell != "True" and cell != "False" and not pd.isnull(cell):
-                i = False
-                break
-        if i == True:
-            data[column] = data[column].astype('bool') 
+            if str(cell).lower() == "true":
+                data[column] = data[column].replace(cell, True)
+            elif str(cell).lower() == "false":
+                data[column] = data[column].replace(cell, False)
     return data 
     
-
 
 
 

@@ -11,11 +11,5 @@ def toGCT(df, fileName):
     writeFile.write(str(len(df.index))) 
     writeFile.write("\t" + str(len(df.columns[2:])) + "\n")
 #Write the data
-    for col in df.columns:
-        writeFile.write(str(col) + "\t")
-    writeFile.write("\n")
-    for line in df.values:
-        for word in line:
-            writeFile.write(str(word) + "\t")
-        writeFile.write("\n")
+    writeFile.write(str(df)) 
     writeFile.close()	

@@ -9,8 +9,7 @@ def arffToPandas(fileName):
     dataList = []
     pattern = r"@[Aa][Tt][Tt][Rr][Ii][Bb][Uu][Tt][Ee]\s+([^\s]*)\s+.*"
     with open(fileName) as dataFile:
-        for line in dataFile:
-            print(line) 
+        for line in dataFile: 
             i += 1 
             line = line.rstrip("\n")
 #Takes the column names in the attribute and put them in a list 

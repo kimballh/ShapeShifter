@@ -15,7 +15,7 @@ class GEOFile(SSFile):
             os.remove(tempFile.name)
         else: 
             df = self.read_geo(self.filePath)
-        #df = df.reset_index()
+        df = df.reset_index()
         #reduce the dataframe to only the requested columns 
         if len(columnList) > 0:
             df = df[columnList]

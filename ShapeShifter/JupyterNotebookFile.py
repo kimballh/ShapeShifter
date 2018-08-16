@@ -16,30 +16,44 @@ class JupyterNBFile(SSFile):
         max_size = 10000
         if df.size > max_size:
             df = df.iloc[0:500, 0:20]
+            #Print message to warn user that data will be truncated.
+            print("Warning: Jupyter support is only available for up to 10,000 data points. Your data has been"
+                  "truncated to have a maximum of 500 rows X 20 columns.")
 
         # Convert the dataframe to a tab-separated string, including or excluding index.
         if includeIndex:
             stringDF = df.to_csv(sep="\t", index_label="index", index=True)
+            df_code = """\
+                    import sys
+                    import pandas as pd
+                    if sys.version_info[0] < 3:
+                        from StringIO import StringIO
+                    else:
+                        from io import StringIO
+
+                    dfString = \"\"\"""" + stringDF + """\"\"\"
+
+                    df = pd.read_table(StringIO(dfString), sep='\t', index_col='index')
+                    print(df)"""
         else:
             stringDF = df.to_csv(sep="\t", index=False)
+            df_code = """\
+                import sys
+                import pandas as pd
+                if sys.version_info[0] < 3:
+                    from StringIO import StringIO
+                else:
+                    from io import StringIO
+
+                dfString = \"\"\"""" + stringDF + """\"\"\"
+
+                df = pd.read_table(StringIO(dfString), sep='\t')
+                print(df)"""
 
         # Create the Notebook
         nb = nbf.v4.new_notebook()
 
         text1 = "## Load data into pandas DataFrame"
-
-        df_code = """\
-        import sys
-        import pandas as pd
-        if sys.version_info[0] < 3:
-            from StringIO import StringIO
-        else:
-            from io import StringIO
-
-        dfString = \"\"\"""" + stringDF + """\"\"\"
-
-        df = pd.read_table(StringIO(dfString), sep='\t', index_col='index')
-        print(df)"""
 
         text2 = "## Analyze data"
 

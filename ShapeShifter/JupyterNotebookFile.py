@@ -79,6 +79,3 @@ class JupyterNBFile(SSFile):
         else:
             self.to_JupyterNB(df, super()._remove_gz(self.filePath), includeIndex)
 
-    #dfFromFile = pd.read_table('/Users/DallasLarsen/BIO494/bio-494/myShapeShifterStuff/exportToJupyterNB/test_data/tenThousandFile.tsv', sep="\t")
-
-    #to_JupyterNB(dfFromFile, "/Users/DallasLarsen/BIO494/bio-494/myShapeShifterStuff/exportToJupyterNB/testTenThousand", True)

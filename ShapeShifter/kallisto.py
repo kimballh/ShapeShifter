@@ -2,9 +2,8 @@ import pandas as pd
 import zipfile
 import os
 import tempfile
-import re
 
-def kallistoToPandas(fileName): 
+def kallistoToPandas(fileName, myColumn): 
     df = pd.DataFrame() 
     i = 0 
     z = zipfile.ZipFile(fileName)
@@ -20,12 +19,12 @@ def kallistoToPandas(fileName):
                     continue         
                 #read the first file's contents into a dataframe 
                 if i == 0: 
-                    df = pd.read_csv(filepath_or_buffer=abundanceFilePath, sep="\t", index_col=0, usecols=["target_id", "tpm"]) 
-                    df = df.rename(columns={"tpm": d})  
+                    df = pd.read_csv(filepath_or_buffer=abundanceFilePath, sep="\t", index_col=0, usecols=["target_id", myColumn]) 
+                    df = df.rename(columns={myColumn : d})  
                 #join other files onto the first dataframe 
                 else:
-                    tempdf = pd.read_csv(filepath_or_buffer=abundanceFilePath, sep = "\t", index_col=0, usecols=["target_id", "tpm"]) 
-                    tempdf = tempdf.rename(columns={"tpm": d})
+                    tempdf = pd.read_csv(filepath_or_buffer=abundanceFilePath, sep = "\t", index_col=0, usecols=["target_id", myColumn]) 
+                    tempdf = tempdf.rename(columns={myColumn: d})
                     df = df.join(tempdf, how='inner') 
                 i += 1
     # Make sure we found at least one file and throw an exception if we didn't.

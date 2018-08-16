@@ -3,7 +3,7 @@ import zipfile
 import os
 import tempfile
 
-def salmonToPandas(fileName): 
+def salmonToPandas(fileName, colName): 
     df = pd.DataFrame() 
     i = 0 
     z = zipfile.ZipFile(fileName)
@@ -13,23 +13,23 @@ def salmonToPandas(fileName):
         #parse through the directory
         for dirpath, dirs, files in sorted(os.walk(temp)):  
             for d in dirs:
-                abundanceFilePath = os.path.join(d, "quant.sf") 
+                quantFilePath = os.path.join(d, "quant.sf") 
 
-                if not os.path.exists(abundanceFilePath):
+                if not os.path.exists(quantFilePath):
                     continue         
                 #read the first file's contents into a dataframe 
                 if i == 0: 
-                    df = pd.read_csv(filepath_or_buffer=abundanceFilePath, sep="\t", index_col=0, usecols=["Name", "TPM"]) 
-                    df = df.rename(columns={"TPM": d}) 
+                    df = pd.read_csv(filepath_or_buffer=quantFilePath, sep="\t", index_col=0, usecols=["Name", colName]) 
+                    df = df.rename(columns={colName: d}) 
                 #join other files onto the first dataframe 
                 else:
-                    tempdf = pd.read_csv(filepath_or_buffer=abundanceFilePath, sep = "\t", index_col=0, usecols=["Name", "TPM"]) 
-                    tempdf = tempdf.rename(columns={"TPM": d})
+                    tempdf = pd.read_csv(filepath_or_buffer=quantFilePath, sep = "\t", index_col=0, usecols=["Name", colName]) 
+                    tempdf = tempdf.rename(columns={colName: d})
                     df = df.join(tempdf, how='inner') 
                 i += 1
     # Make sure we found at least one file and throw an exception if we didn't.
     if df.empty:
-        raise Exception("No abundance.tsv files were found in {}.".format(fileName))
+        raise Exception("No quant.sf files were found in {}.".format(fileName))
 
     #transpose the dataframe
     df = df.T 

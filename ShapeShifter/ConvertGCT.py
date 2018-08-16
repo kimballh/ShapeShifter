@@ -12,14 +12,20 @@ def toGCT(df, fileName):
     writeFile.write("\t" + str(len(df.columns[1:])) + "\n")
     writeFile.close()
 #Write the dataframe
-    df.to_csv(path_or_buf=fileName, sep="\t", na_rep="", mode='a')
-#Manually add a description column. Copy the values in Name over if there's a name column. If no NAME column, throw a descriptive error saying that we need one. 
+    if "NAME" in df.columns:
+        #add a description column
+        df.insert(loc=1, column="Description", value=pd.Series(df["NAME"]))
+    else:
+        #throw a descriptive error.
+        raise Exception("No column titled 'NAME' was found in the dataframe.")
+    df.to_csv(path_or_buf=fileName, sep="\t", na_rep="", index=False, mode='a')
 
 #Takes a GCT file and reads it into a pandas dataframe
 def gctToPandas(fileName):
 #We're trying to keep it from having the default index
-    df = pd.read_csv(filepath_or_buffer=fileName, sep='\t', index_col=False, skiprows=2)
+    df = pd.read_csv(filepath_or_buffer=fileName, sep='\t', skiprows=2)
 #Also remove the description column.
+    df = df.drop(labels="Description", axis=1)
     return df
 
-#Make these changes and run it again. 
+ 

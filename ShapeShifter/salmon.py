@@ -3,7 +3,7 @@ import zipfile
 import os
 import tempfile
 
-def salmonToPandas(fileName, colName): 
+def salmonToPandas(fileName, colName="TPM"): 
     df = pd.DataFrame() 
     i = 0 
     z = zipfile.ZipFile(fileName)

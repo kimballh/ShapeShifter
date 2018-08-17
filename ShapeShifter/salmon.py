@@ -13,7 +13,7 @@ def salmonToPandas(fileName, colName="TPM"):
         #parse through the directory
         for dirpath, dirs, files in sorted(os.walk(temp)):  
             for d in dirs:
-                quantFilePath = os.path.join(d, "quant.sf") 
+                quantFilePath = os.path.join(dirpath, d, "quant.sf") 
 
                 if not os.path.exists(quantFilePath):
                     continue         
